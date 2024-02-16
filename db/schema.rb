@@ -10,9 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_16_175435) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_16_184350) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "fixtures", force: :cascade do |t|
+    t.integer "fixture_id"
+    t.string "status"
+    t.datetime "date_time"
+    t.integer "home_score"
+    t.integer "away_score"
+    t.integer "season"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "home_team_id", null: false
+    t.bigint "away_team_id", null: false
+    t.index ["away_team_id"], name: "index_fixtures_on_away_team_id"
+    t.index ["home_team_id"], name: "index_fixtures_on_home_team_id"
+  end
 
   create_table "players", force: :cascade do |t|
     t.string "name"
@@ -38,6 +53,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_16_175435) do
     t.string "color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "state"
+    t.string "logo_url"
+    t.integer "external_id"
+    t.string "code"
   end
 
   create_table "users", force: :cascade do |t|
@@ -52,5 +71,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_16_175435) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "fixtures", "teams", column: "away_team_id"
+  add_foreign_key "fixtures", "teams", column: "home_team_id"
   add_foreign_key "players", "teams"
 end
