@@ -10,9 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_16_131757) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_16_174828) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "fixtures", force: :cascade do |t|
+    t.integer "fixture_id"
+    t.string "status"
+    t.datetime "date_time"
+    t.integer "home_score"
+    t.integer "away_score"
+    t.integer "competition_id"
+    t.integer "season"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "home_team_id"
+    t.integer "away_team_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
