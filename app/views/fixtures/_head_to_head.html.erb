@@ -1,0 +1,36 @@
+<%= turbo_frame_tag :head_to_head do %>
+  <div class="row">
+    <div class="col">
+      <p><%= @team_one.name %></p>
+      <p>Jogos ganhos: <%= @metrics[:team_one_victories] %></p>
+      <p>Jogos ganhos em casa: <%= @metrics[:team_one_victories_home] %></p>
+      <p>Jogos ganhos fora: <%= @metrics[:team_one_victories_away] %></p>
+      <p>Jogos empatados em casa: <%= @metrics[:team_one_draws_home] %></p>
+      <p>Jogos ganhos de virada: <%= @metrics[:team_one_turnovers] %></p>
+      <p>Jogos ganhos de virada em casa: <%= @metrics[:team_one_turnovers_home] %></p>
+      <p>Jogos ganhos de virada fora: <%= @metrics[:team_one_turnovers_away] %></p>
+      <p>Gols feitos: <%= @metrics[:team_one_goals] %></p>
+      <p>Gols feitos em casa: <%= @metrics[:team_one_goals_home] %></p>
+      <p>Gols feitos fora: <%= @metrics[:team_one_goals_away] %></p>
+      <p>Gols sofridos: <%= @metrics[:team_two_goals] %></p>
+      <p>Gols sofridos em casa: <%= @metrics[:team_two_goals_away] %></p>
+      <p>Gols sofridos fora: <%= @metrics[:team_two_goals_home] %></p>
+    </div>
+    <div class="col">
+      <p><%= @team_two.name %></p>
+      <p>Jogos ganhos: <%= @metrics[:team_two_victories] %></p>
+      <p>Jogos ganhos em casa: <%= @metrics[:team_two_victories_home] %></p>
+      <p>Jogos ganhos fora: <%= @metrics[:team_two_victories_away] %></p>
+      <p>Jogos empatados em casa: <%= @metrics[:team_two_draws_home] %></p>
+      <p>Jogos ganhos de virada: <%= @metrics[:team_two_turnovers] %></p>
+      <p>Jogos ganhos de virada em casa: <%= @metrics[:team_two_turnovers_home] %></p>
+      <p>Jogos ganhos de virada fora: <%= @metrics[:team_two_turnovers_away] %></p>
+      <p>Gols feitos: <%= @metrics[:team_two_goals] %></p>
+      <p>Gols feitos em casa: <%= @metrics[:team_two_goals_home] %></p>
+      <p>Gols feitos fora: <%= @metrics[:team_two_goals_away] %></p>
+      <p>Gols sofridos: <%= @metrics[:team_one_goals] %></p>
+      <p>Gols sofridos em casa: <%= @metrics[:team_one_goals_away] %></p>
+      <p>Gols sofridos fora: <%= @metrics[:team_one_goals_home] %></p>
+    </div>
+  </div>
+<% end %>
