@@ -1,3 +1,4 @@
 class Team < ApplicationRecord
-  attributes :name, :city, :external_id
+  has_many :fixtures, dependent: :destroy
+  has_many :players, dependent: :destroy
 end
