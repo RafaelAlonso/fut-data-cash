@@ -11,6 +11,7 @@ teams['response'].each do |team_info|
 
   puts "Creating #{team['name']}"
   Team.create!(
+    external_id: team['id'],
     name: team['name'],
     code: team['code'],
     country: team['country'],
