@@ -1,6 +1,9 @@
 class Fixture < ApplicationRecord
+  belongs_to :home_team, class_name: 'Team'
+  belongs_to :away_team, class_name: 'Team'
+
   # Validations for presence
-  validates :fixture_id, :home_team_id, :away_team_id, :date_time, presence: true
+  validates :fixture_id, :date_time, presence: true
 
   # Validation for fixture_id uniqueness
   validates :fixture_id, uniqueness: true

@@ -6,8 +6,8 @@ class CreateFixtures < ActiveRecord::Migration[7.0]
       t.datetime :date_time
       t.string :home_team
       t.string :away_team
-      t.integer :home_score
-      t.integer :away_score
+      t.integer :home_score, null: false, default: 0
+      t.integer :away_score, null: false, default: 0
       t.integer :competition_id
       t.integer :season
 

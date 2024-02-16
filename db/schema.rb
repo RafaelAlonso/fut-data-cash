@@ -20,12 +20,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_16_175435) do
     t.datetime "date_time"
     t.integer "home_score"
     t.integer "away_score"
-    t.integer "competition_id"
     t.integer "season"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "home_team_id"
-    t.integer "away_team_id"
+    t.bigint "home_team_id", null: false
+    t.bigint "away_team_id", null: false
+    t.index ["away_team_id"], name: "index_fixtures_on_away_team_id"
+    t.index ["home_team_id"], name: "index_fixtures_on_home_team_id"
   end
 
   create_table "players", force: :cascade do |t|
@@ -66,5 +67,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_16_175435) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "fixtures", "teams", column: "away_team_id"
+  add_foreign_key "fixtures", "teams", column: "home_team_id"
   add_foreign_key "players", "teams"
 end
