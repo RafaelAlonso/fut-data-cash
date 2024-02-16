@@ -21,6 +21,13 @@
                         required: true,
                         input_html: { autocomplete: "new-password" },
                         label: 'Confirme sua senha' %>
+            <%= f.input :team_id,
+                        required: true,
+                        as: :select,
+                        collection: Team.all.map { |t| [t.name, t.id] },
+                        input_html: { class: 'form-select' },
+                        wrapper_html: { class: 'flex-grow-1 ps-3' },
+                        label: 'Time' %>
           </div>
 
           <div class="form-actions mb-3">
