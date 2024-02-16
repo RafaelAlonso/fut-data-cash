@@ -42,6 +42,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_16_184350) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "team_id", null: false
+    t.integer "external_id"
     t.index ["team_id"], name: "index_players_on_team_id"
   end
 
