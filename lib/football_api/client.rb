@@ -38,5 +38,14 @@ module FootballApi
       response = api_request('/fixtures/headtohead', params)
       response['response']
     end
+
+    def fetch_team_fixture_stats(team, fixture)
+      params = {
+        team: team.external_id,
+        fixture: fixture.fixture_id
+      }
+      response = api_request('/fixtures/statistics', params)
+      response['response']
+    end
   end
 end

@@ -8,22 +8,22 @@
                       collection: @teams.map { |t| [t.name, t.id] },
                       input_html: { class: 'form-select' },
                       wrapper_html: { class: 'flex-grow-1 pe-3' },
-                      label: 'Time 1' %>
+                      label: 'Seu Time' %>
 
           <%= f.input :team_two_id,
                       as: :select,
                       collection: @teams.map { |t| [t.name, t.id] },
                       input_html: { class: 'form-select' },
                       wrapper_html: { class: 'flex-grow-1 ps-3' },
-                      label: 'Time 2' %>
+                      label: 'Time adversário' %>
         </div>
         <div>
           <%= f.submit "Comparar", class: "btn btn-primary mt-3 w-100" %>
         </div>
       <% end %>
     </div>
-    <div class="col-12 mt-5">
-      <div class="card p-4">
+    <div class="col-12 my-5">
+      <div class="card p-4" data-controller="stats">
         <%= turbo_stream_from :head_to_head %>
         <%= turbo_frame_tag :head_to_head do %>
           <div></div>

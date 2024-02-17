@@ -1,36 +1,199 @@
 <%= turbo_frame_tag :head_to_head do %>
-  <div class="row">
-    <div class="col">
-      <p><%= @team_one.name %></p>
-      <p>Jogos ganhos: <%= @metrics[:team_one_victories] %></p>
-      <p>Jogos ganhos em casa: <%= @metrics[:team_one_victories_home] %></p>
-      <p>Jogos ganhos fora: <%= @metrics[:team_one_victories_away] %></p>
-      <p>Jogos empatados em casa: <%= @metrics[:team_one_draws_home] %></p>
-      <p>Jogos ganhos de virada: <%= @metrics[:team_one_turnovers] %></p>
-      <p>Jogos ganhos de virada em casa: <%= @metrics[:team_one_turnovers_home] %></p>
-      <p>Jogos ganhos de virada fora: <%= @metrics[:team_one_turnovers_away] %></p>
-      <p>Gols feitos: <%= @metrics[:team_one_goals] %></p>
-      <p>Gols feitos em casa: <%= @metrics[:team_one_goals_home] %></p>
-      <p>Gols feitos fora: <%= @metrics[:team_one_goals_away] %></p>
-      <p>Gols sofridos: <%= @metrics[:team_two_goals] %></p>
-      <p>Gols sofridos em casa: <%= @metrics[:team_two_goals_away] %></p>
-      <p>Gols sofridos fora: <%= @metrics[:team_two_goals_home] %></p>
+  <%
+    team_one_home_games = team_one_fixture_stats.select { |fs| fs.home_or_away == 'home' }
+    team_one_away_games = team_one_fixture_stats.select { |fs| fs.home_or_away == 'away' }
+    team_two_home_games = team_two_fixture_stats.select { |fs| fs.home_or_away == 'home' }
+    team_two_away_games = team_two_fixture_stats.select { |fs| fs.home_or_away == 'away' }
+
+    team_one_wins = team_one_fixture_stats.count { |fs| fs.status == 'win' }
+    team_one_home_wins = team_one_home_games.count { |fs| fs.status == 'win' }
+    team_one_away_wins = team_one_away_games.count { |fs| fs.status == 'win' }
+    team_one_losses = team_one_fixture_stats.count { |fs| fs.status == 'loss' }
+    team_one_home_losses = team_one_home_games.count { |fs| fs.status == 'loss' }
+    team_one_away_losses = team_two_away_games.count { |fs| fs.status == 'loss' }
+    team_one_draws = team_one_fixture_stats.count { |fs| fs.status == 'draw' }
+    team_one_home_draws = team_one_home_games.count { |fs| fs.status == 'draw' }
+    team_one_away_draws = team_one_away_games.count { |fs| fs.status == 'draw' }
+
+    team_one_average_goals = team_one_fixture_stats.sum { |fs| fs.goals_made } / team_one_fixture_stats.size.to_f
+    team_two_average_goals = team_one_fixture_stats.sum { |fs| fs.goals_suffered } / team_one_fixture_stats.size.to_f
+    team_one_home_goals = team_one_home_games.sum(&:goals_made)
+    team_one_away_goals = team_one_away_games.sum(&:goals_made)
+    team_two_home_goals = team_two_home_games.sum(&:goals_made)
+    team_two_away_goals = team_two_away_games.sum(&:goals_made)
+
+    team_one_average_ball_posession = team_one_fixture_stats.sum(&:ball_posession) / team_one_fixture_stats.size.to_f
+    team_one_home_average_ball_posession = team_one_home_games.sum(&:ball_posession) / team_one_home_games.size.to_f
+    team_one_away_average_ball_posession = team_one_away_games.sum(&:ball_posession) / team_one_away_games.size.to_f
+
+    team_two_average_ball_posession = team_two_fixture_stats.sum(&:ball_posession) / team_two_fixture_stats.size.to_f
+    team_two_home_average_ball_posession = team_two_home_games.sum(&:ball_posession) / team_two_home_games.size.to_f
+    team_two_away_average_ball_posession = team_two_away_games.sum(&:ball_posession) / team_two_away_games.size.to_f
+  %>
+  <div class='position-relative'>
+    <div class="team-one-logo d-flex justify-content-center align-items-center mb-4">
+      <%= image_tag team_one.logo_url, width: 80 %>
     </div>
-    <div class="col">
-      <p><%= @team_two.name %></p>
-      <p>Jogos ganhos: <%= @metrics[:team_two_victories] %></p>
-      <p>Jogos ganhos em casa: <%= @metrics[:team_two_victories_home] %></p>
-      <p>Jogos ganhos fora: <%= @metrics[:team_two_victories_away] %></p>
-      <p>Jogos empatados em casa: <%= @metrics[:team_two_draws_home] %></p>
-      <p>Jogos ganhos de virada: <%= @metrics[:team_two_turnovers] %></p>
-      <p>Jogos ganhos de virada em casa: <%= @metrics[:team_two_turnovers_home] %></p>
-      <p>Jogos ganhos de virada fora: <%= @metrics[:team_two_turnovers_away] %></p>
-      <p>Gols feitos: <%= @metrics[:team_two_goals] %></p>
-      <p>Gols feitos em casa: <%= @metrics[:team_two_goals_home] %></p>
-      <p>Gols feitos fora: <%= @metrics[:team_two_goals_away] %></p>
-      <p>Gols sofridos: <%= @metrics[:team_one_goals] %></p>
-      <p>Gols sofridos em casa: <%= @metrics[:team_one_goals_away] %></p>
-      <p>Gols sofridos fora: <%= @metrics[:team_one_goals_home] %></p>
+
+    <div class="btn btn-primary btn-lg position-absolute" style="top: 0; right: 0">
+      <%= link_to '#/' do %>
+        <i class="fa-solid fa-share-nodes" style="color: #ffffff;"></i>
+      <% end %>
+    </div>
+
+    <div class="row mb-5">
+      <div class="col-12 col-lg-6">
+        <% if team_one_wins > (team_one_losses + team_one_draws) %>
+          <h4 style="font-weight: bold">DOMINANTE!</h4>
+          <p style="font-size: 24px">
+            Seu time venceu <%= (team_one_wins * 100) / team_one_fixture_stats.count %>% dos últimos dez jogos contra o <%= team_two.name %>!
+          </p>
+        <% elsif team_one_wins > team_one_losses %>
+          <h4 style="font-weight: bold">NA DIANTEIRA!</h4>
+          <p style="font-size: 24px">
+            Seu time venceu <%= team_one_wins - team_one_losses %> jogos a mais do que o <%= team_two.name %> nos últimos dez jogos
+          </p>
+        <% elsif team_one_fixture_stats.last.status == 'win' %>
+          <h4 style="font-weight: bold">DANDO A VOLTA POR CIMA!</h4>
+          <p style="font-size: 24px">Apesar de não ter vencido mais jogos historicamente, ele venceu o último confronto direto contra o <%= team_two.name %>. Força torcedor!</p>
+        <% else %>
+          <h4 style="font-weight: bold">CORRENDO ATRÁS!</h4>
+          <p style="font-size: 24px">Seu time venceu apenas <%= (team_one_wins * 100) / team_one_fixture_stats.count %>% dos últimos dez jogos contra o <%= team_two.name %>, mas a esperança é a última que morre. Força torcedor!</p>
+        <% end %>
+
+
+        <% if team_one_home_wins > (team_one_home_draws + team_one_home_losses) %>
+          <h4 style="font-weight: bold">QUEM MANDA AQUI SOMOS NÓS!</h4>
+          <p style="font-size: 24px">Seu time venceu <%= (team_one_home_wins * 100) / team_one_home_games.count %>% dos últimos dez jogos contra o <%= team_two.name %> em casa!</p>
+        <% end %>
+
+        <% if team_one_away_wins > (team_one_away_draws + team_one_away_losses) %>
+          <h4 style="font-weight: bold">CONQUISTADORES!</h4>
+          <p style="font-size: 24px">Seu time venceu <%= (team_one_away_wins * 100) / team_one_away_games.count %>% dos últimos dez jogos contra o <%= team_two.name %> fora de casa!</p>
+        <% end %>
+      </div>
+      <div class="col-12 col-lg-6">
+        <%= column_chart [
+            ['vitórias', team_one_fixture_stats.count { |fs| fs.status == 'win' }],
+            ['empates', team_one_fixture_stats.count { |fs| fs.status == 'draw' }],
+            ['derrotas', team_one_fixture_stats.count { |fs| fs.status == 'loss' }]
+          ],
+          colors: ['green', '#ccc', 'red'],
+          library: {
+            scales: {
+              x: {
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+                grid: {
+                  display: false
+                }
+              }
+            }
+          }
+        %>
+      </div>
+    </div>
+
+    <div class="row mb-5">
+      <div class="col-12 col-lg-6">
+        <% if team_one_average_goals - team_two_average_goals >= 1 %>
+          <h4 style="font-weight: bold">DE GOLEADA!</h4>
+          <p style="font-size: 24px">Em média, seu time faz <%= (team_one_average_goals - team_two_average_goals).round(2) %> gols a mais do que o <%= team_two.name %> em embates diretos!</p>
+        <% end %>
+
+        <% if team_one_home_goals > team_two_away_goals %>
+          <h4 style="font-weight: bold">COM TORCIDA É MAIS GOSTOSO!</h4>
+          <p style="font-size: 24px">
+            Em casa, seu time faz em média <%= (team_one_home_goals / team_one_home_games.size.to_f).round(2) %> gols contra o <%= team_two.name %>, enquanto eles só fazem <%= (team_two_away_goals / team_two_away_games.size.to_f).round(2) %>!
+          </p>
+        <% end %>
+
+
+        <% if team_one_away_goals > team_two_home_goals %>
+          <h4 style="font-weight: bold">TOCANDO O TERROR!</h4>
+          <p style="font-size: 24px">Nos últimos dez confrontos, seu time fez <%= team_one_away_goals - team_two_home_goals %> gols a mais que o <%= team_two.name %>... na casa deles!</p>
+        <% end %>
+
+
+      </div>
+      <div class="col-12 col-lg-6">
+        <%= column_chart [
+          ['Gols feitos em casa', team_one_home_goals],
+          ['Gols feitos fora de casa', team_one_away_goals],
+          ['Gols sofridos em casa', team_two_away_goals],
+          ['Gols sofridos fora de casa', team_two_home_goals],
+        ],
+          colors: ['green', 'lightgreen', 'red', '#FFCCCB'],
+          library: {
+            scales: {
+              x: {
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+                grid: {
+                  display: false
+                }
+              }
+            }
+          }
+        %>
+      </div>
+    </div>
+
+    <div class="row mb-5">
+      <div class="col-12 col-lg-6">
+        <% if team_one_average_ball_posession > team_two_average_ball_posession %>
+          <h4 style="font-weight: bold">FOMINHAS!</h4>
+          <p style="font-size: 24px">Seu time tem, em média, <%= team_one_average_ball_posession.round(2) %>% de posse de bola contra o <%= team_two.name %>, que tem só <%= team_two_average_ball_posession.round(2) %>%!</p>
+        <% end %>
+
+        <% if team_one_home_average_ball_posession > team_two_away_average_ball_posession %>
+          <h4 style="font-weight: bold">MINHA CASA, MINHAS REGRAS!</h4>
+          <p style="font-size: 24px">Em casa, seu time tem <%= team_one_home_average_ball_posession.round(2) %>% de posse de bola contra o <%= team_two.name %>, que tem só <%= team_two_away_average_ball_posession.round(2) %>%!</p>
+        <% else %>
+          <h4 style="font-weight: bold">PEGA LADRÃO!</h4>
+          <p style="font-size: 24px">Em casa, seu time tem <%= team_one_home_average_ball_posession.round(2) %>% de posse de bola contra o <%= team_two.name %>...</p>
+        <% end %>
+      </div>
+      <div class="col-12 col-lg-6">
+        <%= area_chart [
+          { name: 'Posse de bola (%)', data: team_one_fixture_stats.map { |fs| [fs.fixture.date_time.to_date, fs.ball_posession] }},
+          { name: 'Tempo sem bola (%)', data: team_two_fixture_stats.map { |fs| [fs.fixture.date_time.to_date, fs.ball_posession] }}
+        ],
+          colors: [ 'green', 'red' ],
+          min: 0,
+          max: 100,
+          library: {
+            scales: {
+              x: {
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+                grid: {
+                  display: false
+                }
+              }
+            }
+          }
+        %>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-center align-items center">
+      <h3>E aí? Gostou da análise? Então...</h3>
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center">
+      <%= link_to 'Poste!', '#/', class: 'btn btn-primary btn-lg w-100' %>
+      <p class="mx-3 my-0">E</p>
+      <%= link_to 'Aposte!', 'https://estrelabet.com/pb#/overview', target: '_blank', class: 'btn btn-success btn-lg w-100' %>
     </div>
   </div>
 <% end %>

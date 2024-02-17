@@ -16,7 +16,7 @@ class Fixture < ApplicationRecord
 
   private
 
-  def home_team_id_cannot_be_same_as_away_team_id
+  def home_team_cannot_be_same_as_away_team
     errors.add(:home_team, "cannot be the same id as the away id") if home_team_id == away_team_id
   end
 end
