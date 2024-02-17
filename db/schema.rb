@@ -10,9 +10,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_02_16_184350) do
+ActiveRecord::Schema[7.0].define(version: 2024_02_17_132707) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "fixture_stats", force: :cascade do |t|
+    t.bigint "fixture_id", null: false
+    t.bigint "team_id", null: false
+    t.integer "shots_on_goal"
+    t.integer "shots_off_goal"
+    t.integer "shots_insidebox"
+    t.integer "shots_outsidebox"
+    t.integer "total_shots"
+    t.integer "blocked_shots"
+    t.integer "fouls"
+    t.integer "corner_kicks"
+    t.integer "offsides"
+    t.integer "ball_posession"
+    t.integer "yellow_cards"
+    t.integer "red_cards"
+    t.integer "goalkeeper_saves"
+    t.integer "total_passes"
+    t.integer "passes_accurate"
+    t.integer "passes_percentage"
+    t.string "home_or_away"
+    t.integer "status"
+    t.integer "goals_made"
+    t.integer "goals_suffered"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["fixture_id"], name: "index_fixture_stats_on_fixture_id"
+    t.index ["team_id"], name: "index_fixture_stats_on_team_id"
+  end
 
   create_table "fixtures", force: :cascade do |t|
     t.integer "fixture_id"
@@ -25,6 +54,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_16_184350) do
     t.datetime "updated_at", null: false
     t.bigint "home_team_id", null: false
     t.bigint "away_team_id", null: false
+    t.boolean "turnover"
     t.index ["away_team_id"], name: "index_fixtures_on_away_team_id"
     t.index ["home_team_id"], name: "index_fixtures_on_home_team_id"
   end
@@ -72,6 +102,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_16_184350) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "fixture_stats", "fixtures"
+  add_foreign_key "fixture_stats", "teams"
   add_foreign_key "fixtures", "teams", column: "away_team_id"
   add_foreign_key "fixtures", "teams", column: "home_team_id"
   add_foreign_key "players", "teams"

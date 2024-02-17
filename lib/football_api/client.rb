@@ -29,5 +29,23 @@ module FootballApi
     def fetch_teams
       response = api_request('/teams', { country: 'Brazil' })
     end
+
+    def fetch_head_to_head(home_team, away_team, n_matches = 5)
+      params = {
+        h2h: "#{home_team.external_id}-#{away_team.external_id}",
+        last: n_matches
+      }
+      response = api_request('/fixtures/headtohead', params)
+      response['response']
+    end
+
+    def fetch_team_fixture_stats(team, fixture)
+      params = {
+        team: team.external_id,
+        fixture: fixture.fixture_id
+      }
+      response = api_request('/fixtures/statistics', params)
+      response['response']
+    end
   end
 end
